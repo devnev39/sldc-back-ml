@@ -1,0 +1,20 @@
+1. data preprocessing
+
+- Download some test data first - save it offline in csv to test and build the model
+
+- The data should be saved such that the web preprocessing and python preprocessing mathces
+and gives same result for same data.
+
+- Download the data directly using firebase connection, save the data
+
+- preprocess the data and then save to numpy or any format
+
+2. build the model
+
+- Decide the features that go into the model
+
+- Build an entry level lstm model and train it using the data
+
+3. setup update of the model based on latest data
+
+--> next steps
