@@ -15,6 +15,10 @@ def get_all_docs(convert_to_dict = True, frm: float = None, to: float = None):
         dates -= 1
     return [doc.to_dict() for doc in all_docs] if convert_to_dict else all_docs
 
+def get_all_processed_docs(convert_to_dict = True):
+    docs = db.collection('processed').order_by("created_at").stream()
+    return [doc.to_dict() for doc in docs] if convert_to_dict else docs
+
 def save_doc(doc: dict, collection: str):
     doc_ref = db.collection(collection).document()
     doc_ref.set(doc)

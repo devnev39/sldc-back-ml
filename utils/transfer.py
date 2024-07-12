@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-from database.api import get_all_docs, get_docs_date
+from database.api import get_all_docs, get_all_processed_docs
+from database.database import db
 from utils.savedoc import save_previous_data_to_processed
 
 def transfer_docs(to: str, before: float = None, after: float = None):
@@ -46,3 +47,30 @@ def transfer_docs(to: str, before: float = None, after: float = None):
 
     print("Transfered !")
 
+def findDoc(docs, field, value):
+    return next((doc for doc in docs if doc[field] == value), None)
+
+def transfer_docs():
+    docs = get_all_processed_docs(convert_to_dict=False)
+
+    processed = {}
+
+    docs = [doc for doc in docs]
+
+    print(len(docs))
+
+    for doc in docs:
+        ts = datetime.fromtimestamp(doc.to_dict()['created_at'].timestamp())
+        date = ts.strftime("%Y-%m-%d")
+        if processed.get(date):
+            processed[date][f'{ts.strftime("%H:%M:%S")}'] = doc.to_dict()
+        else:
+            processed[date] = {f'{ts.strftime("%H:%M:%S")}': doc.to_dict()}
+            
+
+    # print(processed)
+
+    for item in processed.keys():
+        db.collection('parsed').document(item).set(processed[item])
+
+    print("processed all !")
