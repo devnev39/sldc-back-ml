@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from database.api import get_all_docs, get_all_processed_docs
+from database.api import get_all_docs, get_all_parsed_docs
 from database.database import db
 from utils.savedoc import save_previous_data_to_processed
 
@@ -51,7 +51,10 @@ def findDoc(docs, field, value):
     return next((doc for doc in docs if doc[field] == value), None)
 
 def transfer_docs():
-    docs = get_all_processed_docs(convert_to_dict=False)
+    """
+    * Cannot work
+    """
+    docs = get_all_parsed_docs(convert_to_dict=False)
 
     processed = {}
 
