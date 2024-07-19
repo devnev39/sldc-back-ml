@@ -7,11 +7,17 @@ from utils.artifact import push_artifact
 
 load_dotenv()
 
-
 model = load_model()
+
+print(model)
 
 data = load_data()
 
+for key,val in data.items():
+    print(f'{key} : {len(val)}')
+
 out = train_model(model, data)
+
+print(out)
 
 push_artifact(out)

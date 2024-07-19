@@ -4,9 +4,9 @@ from preprocessing.selection import rescale_output
 
 def train_model(model, data):
     model_conf = read_model_config()
-    model_props = model
-
-    model = model_props['model']
+    
+    name = model['name']
+    model = model['model']
 
     model.compile(loss='mse', optimizer='adam')
 
@@ -28,7 +28,7 @@ def train_model(model, data):
 
     return {
         "model": model,
-        "name": data['name'],
+        "name": name,
         "mse": sum(hist.history['loss'])/len(hist.history['loss']),
         "val_mse": sum(hist.history['val_loss'])/len(hist.history['val_loss']),
         "epochs": model_conf['epochs'],
