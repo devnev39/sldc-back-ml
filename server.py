@@ -13,8 +13,12 @@ app = FastAPI()
 @app.get("/")
 def read_root(response: Response):
     model = load_model()
+    print(model)
     data = load_data()
+    for key,val in data.items():
+        print(f'{key} : {len(val)}')
     out = train_model(model, data)
+    print(out)
     push_artifact(out)
     
     response.status_code = status.HTTP_201_CREATED
