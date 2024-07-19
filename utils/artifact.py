@@ -2,6 +2,7 @@ import os
 import requests
 import json
 from database.api import read_model_config, save_model_props
+from google.cloud.firestore import SERVER_TIMESTAMP
 
 REPO = os.environ['RELEASE_REPO']
 TOKEN = os.environ['RELEASE_API_KEY']
@@ -143,6 +144,7 @@ def push_artifact(model):
     create_release(tag_name, release_name, release_description, model_files)
 
     del model['model']
+    model['created_at'] = SERVER_TIMESTAMP
     save_model_props(model)
     
     manage_releases()
