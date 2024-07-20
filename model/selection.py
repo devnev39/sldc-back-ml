@@ -49,7 +49,7 @@ def load_model():
             download_latest_release(model_name) 
         else:
             model_link = model_config['new_model_link']
-            model_name = model_link.split("/")[-1].split(".")[0]
+            model_name = model_config['new_model_name']
             download_model_link(model_link)
         model = load_downloaded_model()
         return {"model": model, "name": model_name}

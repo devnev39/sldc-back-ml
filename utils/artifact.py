@@ -110,10 +110,11 @@ def manage_releases():
             MODEL_TYPES.append(release['name'])
     
     for model_type in MODEL_TYPES:
-        model_releases = [release for release in releases if release['name'].startswith(model_type)]
-        model_releases.sort(key=lambda x: x['created_at'], reverse=True)
+        model_releases = [release for release in releases if release['name'].find(model_type) != -1]
+        model_releases.sort(key = lambda x: x['published_at'], reverse=True)
         if len(model_releases) > RELEASES_TO_KEEP:
             for release in model_releases[RELEASES_TO_KEEP:]:
+                print(f"Deleting release ID: {release['id']} - {release['tag_name']}")
                 delete_release(release['id'])
 
 def delete_release(release_id):
@@ -149,7 +150,7 @@ def push_artifact(model):
 
     del model['model']
     model['created_at'] = SERVER_TIMESTAMP
+    model['tag_name'] = tag_name
     save_model_props(model)
     
     manage_releases()
-    delete_files(model_files)

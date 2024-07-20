@@ -18,6 +18,12 @@ def read_root(response: Response):
     for key,val in data.items():
         print(f'{key} : {len(val)}')
     out = train_model(model, data)
+
+    if os.path.exists("/tmp/model_checkpoint.h5"):
+        print("Model found !")
+    else:
+        print("Model not found !")
+
     print(out)
     push_artifact(out)
     
