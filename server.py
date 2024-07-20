@@ -1,11 +1,11 @@
-from fastapi import FastAPI, status, Response
 import os
-from dotenv import load_dotenv, dotenv_values
+from fastapi import FastAPI, status, Response
 from model.selection import load_model
 from preprocessing.selection import load_data
 from model.engine import train_model
 from utils.artifact import push_artifact
-load_dotenv()
+
+print(os.environ)
 
 app = FastAPI()
 

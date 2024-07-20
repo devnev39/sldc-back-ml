@@ -22,9 +22,9 @@ def load_downloaded_model():
         raise Exception
     """
 
-    if os.path.exists("model.h5"):
-        model = tf.keras.models.load_model("model.h5")
-        os.remove("model.h5")
+    if os.path.exists("/tmp/model.h5"):
+        model = tf.keras.models.load_model("/tmp/model.h5")
+        os.remove("/tmp/model.h5")
         return model
     else:
         raise Exception("Model not found")
@@ -41,11 +41,12 @@ def load_model():
     """
     try:
         model_config = read_model_config()
+        print("Model config:")
+        print(model_config)
         model_name = ""
         if model_config["use_release"]:
             model_name = model_config["release_name"]
-            download_latest_release(model_name)
-            
+            download_latest_release(model_name) 
         else:
             model_link = model_config['new_model_link']
             model_name = model_link.split("/")[-1].split(".")[0]

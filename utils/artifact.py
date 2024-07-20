@@ -59,7 +59,7 @@ def download_latest_release(model_name):
 
     req = requests.get(url)
 
-    with open("model.h5", "wb") as file:
+    with open("/tmp/model.h5", "wb") as file:
         file.write(req.content)
 
 def get_releases():
@@ -95,7 +95,7 @@ def create_release(tag_name, release_name, release_description, model_files):
         print(f"Created release: {release['html_url']}")
         upload_assets(release_id, model_files)
 
-        # os.remove("../model_checkpoint.h5")
+        os.remove("../model_checkpoint.h5")
     else:
         print(f"Failed to create release: {response.json()}")
 
@@ -124,6 +124,10 @@ def delete_release(release_id):
     else:
         print(f"Failed to delete release ID {release_id}: {response.json()}")
 
+def delete_files(files):
+    for file in files:
+        os.remove(file)
+
 def push_artifact(model):
     """
     Push the model to the release repo
@@ -139,7 +143,7 @@ def push_artifact(model):
             params += f'--{key} : {val}\n'
     
     release_description = f"Version : {version}\n{params}"
-    model_files = ["../model_checkpoint.h5"]
+    model_files = ["/tmp/model_checkpoint.h5"]
 
     create_release(tag_name, release_name, release_description, model_files)
 
@@ -148,3 +152,4 @@ def push_artifact(model):
     save_model_props(model)
     
     manage_releases()
+    delete_files(model_files)
