@@ -5,10 +5,7 @@ from preprocessing.selection import load_data
 from model.engine import train_model
 from utils.artifact import push_artifact
 
-print(os.environ)
-
 app = FastAPI()
-
 
 @app.get("/")
 def read_root(response: Response):
