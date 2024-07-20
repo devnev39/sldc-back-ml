@@ -6,7 +6,7 @@ from utils.artifact import download_latest_release
 
 def download_model_link(model_link):
     req = requests.get(model_link)
-    with open("model.h5", "wb") as file:
+    with open("/tmp/model.h5", "wb") as file:
         file.write(req.content)
 
 def load_downloaded_model():

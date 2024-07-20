@@ -95,7 +95,7 @@ def create_release(tag_name, release_name, release_description, model_files):
         print(f"Created release: {release['html_url']}")
         upload_assets(release_id, model_files)
 
-        os.remove("../model_checkpoint.h5")
+        os.remove("/tmp/model_checkpoint.h5")
     else:
         print(f"Failed to create release: {response.json()}")
 
