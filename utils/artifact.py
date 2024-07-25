@@ -98,7 +98,7 @@ def create_release(tag_name, release_name, release_description, model_files):
         print(f"Created release: {release['html_url']}")
         upload_assets(release_id, model_files)        
         
-        shutil.rmtree("/tmp")
+        # shutil.rmtree("/tmp") # Resource buisy error
     else:
         print(f"Failed to create release: {response.json()}")
 
