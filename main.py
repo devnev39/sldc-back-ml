@@ -1,4 +1,3 @@
-import os
 from dotenv import load_dotenv, dotenv_values
 from model.selection import load_model
 from preprocessing.selection import load_data

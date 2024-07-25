@@ -29,6 +29,8 @@ def upload_assets(release_id, model_files):
             else:
                 print(f"Failed to upload asset: {upload_response.json()}")
 
+def find(lst: list, key: str, value: str):
+    return next((d for d in lst if d[key] == value), None)
 
 def download_latest_release(model_name):
     """
@@ -55,11 +57,11 @@ def download_latest_release(model_name):
 
     releases.sort(key=lambda x: x['created_at'], reverse=True)
 
-    url = releases[0]['assets'][0]['browser_download_url']
+    url = find(releases[0]['assets'], "name", "model_checkpoint.keras")['browser_download_url']
 
     req = requests.get(url)
 
-    with open("/tmp/model.h5", "wb") as file:
+    with open("/tmp/model.keras", "wb") as file:
         file.write(req.content)
 
 def get_releases():
@@ -95,7 +97,8 @@ def create_release(tag_name, release_name, release_description, model_files):
         print(f"Created release: {release['html_url']}")
         upload_assets(release_id, model_files)
 
-        os.remove("/tmp/model_checkpoint.h5")
+        os.rmdir("/tmp")
+        
     else:
         print(f"Failed to create release: {response.json()}")
 
@@ -144,8 +147,8 @@ def push_artifact(model):
             params += f'--{key} : {val}\n'
     
     release_description = f"Version : {version}\n{params}"
-    model_files = ["/tmp/model_checkpoint.h5"]
-
+    model_files = ["/tmp/model_checkpoint.keras"]
+    model_files = model_files + [os.path.join("/tmp/model_checkpoint", i) for i in os.listdir("/tmp/model_checkpoint")]
     create_release(tag_name, release_name, release_description, model_files)
 
     del model['model']

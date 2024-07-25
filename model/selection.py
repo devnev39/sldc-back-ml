@@ -6,7 +6,7 @@ from utils.artifact import download_latest_release
 
 def download_model_link(model_link):
     req = requests.get(model_link)
-    with open("/tmp/model.h5", "wb") as file:
+    with open("/tmp/model.keras", "wb") as file:
         file.write(req.content)
 
 def load_downloaded_model():
@@ -22,9 +22,9 @@ def load_downloaded_model():
         raise Exception
     """
 
-    if os.path.exists("/tmp/model.h5"):
-        model = tf.keras.models.load_model("/tmp/model.h5")
-        os.remove("/tmp/model.h5")
+    if os.path.exists("/tmp/model.keras"):
+        model = tf.keras.models.load_model("/tmp/model.keras")
+        os.remove("/tmp/model.keras")
         return model
     else:
         raise Exception("Model not found")

@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflowjs as tfjs
 from database.api import read_model_config, read_data_config
 from preprocessing.selection import rescale_output
 
@@ -12,7 +13,7 @@ def train_model(model, data):
     model.compile(loss='mse', optimizer='adam')
 
     checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-    '/tmp/model_checkpoint.h5', save_best_only=True, monitor='val_loss', mode='min')
+    '/tmp/model_checkpoint.keras', save_best_only=True, monitor='val_loss', mode='min')
 
     hist = model.fit(data['X_train'], data['y_train'], epochs=model_conf['epochs'], validation_data=(data['X_val'], data['y_val']), callbacks=[checkpoint_callback], batch_size=model_conf['batch_size'])
 
@@ -26,6 +27,8 @@ def train_model(model, data):
 
     avg_loss = abs(sum(y_test - yhat)) / len(y_test)
     avg_loss = avg_loss.flatten()
+
+    tfjs.converters.save_keras_model(model, "/tmp/model_checkpoint")
 
     return {
         "model": model,
