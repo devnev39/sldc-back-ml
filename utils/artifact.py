@@ -1,4 +1,5 @@
 import os
+import shutil
 import requests
 import json
 from database.api import read_model_config, save_model_props
@@ -95,10 +96,9 @@ def create_release(tag_name, release_name, release_description, model_files):
         release = response.json()
         release_id = release["id"]
         print(f"Created release: {release['html_url']}")
-        upload_assets(release_id, model_files)
-
-        os.rmdir("/tmp")
+        upload_assets(release_id, model_files)        
         
+        shutil.rmtree("/tmp")
     else:
         print(f"Failed to create release: {response.json()}")
 
