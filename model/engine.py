@@ -1,5 +1,6 @@
 import tensorflow as tf
-import tensorflowjs as tfjs
+import tf2onnx
+import onnx
 from database.api import read_model_config, read_data_config
 from preprocessing.selection import rescale_output
 
@@ -28,7 +29,11 @@ def train_model(model, data):
     avg_loss = abs(sum(y_test - yhat)) / len(y_test)
     avg_loss = avg_loss.flatten()
 
-    tfjs.converters.save_keras_model(model, "/tmp/model_checkpoint")
+    input_signature = [tf.TensorSpec([None, model_conf['window_size'], data['X_train'].shape[-1]], tf.float64, name='x')]
+
+    onnx_model, _ = tf2onnx.convert.from_keras(model, input_signature, opset=13)
+
+    onnx.save(onnx_model, "/tmp/model.onnx")
 
     return {
         "model": model,
@@ -40,4 +45,11 @@ def train_model(model, data):
         "window_size": data_conf['window_size'],
         "avg_loss": avg_loss[0],
         "train_data_size": len(data['X_train']),
+        "train_mean": data["train_mean"].to_dict(),
+        "train_std": data["train_std"].to_dict(),
+        "version_info": {
+            "tf": tf.__version__,
+            "onnx": onnx.__version__,
+            "tf2onnx": tf2onnx.__version__
+        }
     }

@@ -106,6 +106,9 @@ def load_data():
     df = add_columns(df)
     df = preprocess_df(df)
 
+    print("columns order: ")
+    print(df.columns)
+
     TRAIN = 0.7
     VALID = 0.9
     TEST = 0.8

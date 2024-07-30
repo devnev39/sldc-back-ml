@@ -1,7 +1,8 @@
 import os
-import shutil
+import copy
 import requests
 import json
+from database.database import bucket
 from database.api import read_model_config, save_model_props
 from google.cloud.firestore import SERVER_TIMESTAMP
 
@@ -132,6 +133,24 @@ def delete_files(files):
     for file in files:
         os.remove(file)
 
+def dict_to_string(d: dict):
+    s = ""
+    for key,val in d.items():
+        if type(val) == dict:
+            s += f'==={key}===\n'
+            s += dict_to_string(val)
+        else:
+            s += f'--> {key} : {val}\n'
+    return s
+
+def upload_to_storage(filename, model_tag):
+  path = f"models/{model_tag}/model.onnx"
+  blob = bucket.blob(path)
+  blob.upload_from_filename(filename)
+  blob.make_public()
+  print(f"Uploaded asset to storage: {blob.public_url}")
+  return blob.public_url
+
 def push_artifact(model):
     """
     Push the model to the release repo
@@ -140,20 +159,21 @@ def push_artifact(model):
     version = get_next_version(model_type)
     tag_name = f"{model_type}.train{version}"
     release_name = model_type
+    
+    del model['model']
+    model['tag_name'] = tag_name
 
-    params = ""
-    for key,val in model.items():
-        if key != 'model':
-            params += f'--{key} : {val}\n'
+    link = upload_to_storage("/tmp/model.onnx", tag_name)
+    model['link'] = link
+
+    params = dict_to_string(model) 
     
     release_description = f"Version : {version}\n{params}"
-    model_files = ["/tmp/model_checkpoint.keras"]
-    model_files = model_files + [os.path.join("/tmp/model_checkpoint", i) for i in os.listdir("/tmp/model_checkpoint")]
+    model_files = ["/tmp/model_checkpoint.keras", "/tmp/model.onnx"]
     create_release(tag_name, release_name, release_description, model_files)
 
-    del model['model']
+    
     model['created_at'] = SERVER_TIMESTAMP
-    model['tag_name'] = tag_name
     save_model_props(model)
     
     manage_releases()

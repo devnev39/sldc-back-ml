@@ -1,2 +1,3 @@
 *.csv
 .env.local
+test.py

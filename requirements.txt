@@ -5,7 +5,8 @@ seaborn==0.13.2
 uvicorn==0.30.1
 fastapi==0.111.1
 fastapi-cli==0.0.4
+tf2onnx==1.16.1
+onnxruntime==1.18.1
 fastapi
 uvicorn
 starlette
-tensorflowjs
