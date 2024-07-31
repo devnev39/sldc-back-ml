@@ -139,6 +139,9 @@ def dict_to_string(d: dict):
         if type(val) == dict:
             s += f'==={key}===\n'
             s += dict_to_string(val)
+        elif type(val) == list:
+            s += ", ".join(val)
+            s += "\n"
         else:
             s += f'--> {key} : {val}\n'
     return s

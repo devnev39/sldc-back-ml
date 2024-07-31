@@ -55,4 +55,5 @@ def load_model():
         return {"model": model, "name": model_name}
     except Exception as ex:
         print(ex)
+        raise ex
 

@@ -29,7 +29,7 @@ def train_model(model, data):
     avg_loss = abs(sum(y_test - yhat)) / len(y_test)
     avg_loss = avg_loss.flatten()
 
-    input_signature = [tf.TensorSpec([None, model_conf['window_size'], data['X_train'].shape[-1]], tf.float64, name='x')]
+    input_signature = [tf.TensorSpec([None, data_conf['window_size'], data['X_train'].shape[-1]], tf.float64, name='x')]
 
     onnx_model, _ = tf2onnx.convert.from_keras(model, input_signature, opset=13)
 
@@ -47,6 +47,7 @@ def train_model(model, data):
         "train_data_size": len(data['X_train']),
         "train_mean": data["train_mean"].to_dict(),
         "train_std": data["train_std"].to_dict(),
+        "columns": data['columns'],
         "version_info": {
             "tf": tf.__version__,
             "onnx": onnx.__version__,

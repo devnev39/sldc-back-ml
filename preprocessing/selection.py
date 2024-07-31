@@ -138,5 +138,6 @@ def load_data():
         'X_val': X_val,
         'y_val': y_val,
         'train_mean': train_mean,
-        'train_std': train_std
+        'train_std': train_std,
+        'columns': list(train_df.columns.values)
     }

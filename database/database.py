@@ -7,5 +7,5 @@ app = firebase_admin.initialize_app(options={
 })
 
 db = firestore.client(app=app)
-bucket = storage.bucket
+bucket = storage.bucket(app=app)
 

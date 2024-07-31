@@ -1,8 +1,13 @@
+# FROM python:3.11.0
 FROM tensorflow/tensorflow:2.15.0
 
 WORKDIR /app
 
 COPY requirements.txt /app/
+
+RUN apt update
+
+RUN apt install -y cmake
 
 RUN pip install --no-cache-dir -r requirements.txt
 
