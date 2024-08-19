@@ -177,6 +177,7 @@ def push_artifact(model):
 
     
     model['created_at'] = SERVER_TIMESTAMP
+    model['is_prod'] = True
     save_model_props(model)
     
     manage_releases()
