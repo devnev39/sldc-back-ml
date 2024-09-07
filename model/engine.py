@@ -1,6 +1,7 @@
 import tensorflow as tf
 import tf2onnx
 import onnx
+import numpy as np
 from database.api import read_model_config, read_data_config
 from preprocessing.selection import rescale_output
 
@@ -17,6 +18,9 @@ def train_model(model, data):
     '/tmp/model_checkpoint.keras', save_best_only=True, monitor='val_loss', mode='min')
 
     hist = model.fit(data['X_train'], data['y_train'], epochs=model_conf['epochs'], validation_data=(data['X_val'], data['y_val']), callbacks=[checkpoint_callback], batch_size=model_conf['batch_size'])
+
+    params = np.sum([np.prod(v.get_shape().as_list()) for v in model.trainable_variables])
+    parameters = f"{params} ({(params*4)/(1024**2)} MB)"
 
     yhat = model.predict(data['X_test'])
     mean = data['train_mean'].to_numpy().reshape(1,-1)[:,0]
@@ -52,5 +56,6 @@ def train_model(model, data):
             "tf": tf.__version__,
             "onnx": onnx.__version__,
             "tf2onnx": tf2onnx.__version__
-        }
+        },
+        "parameters": parameters
     }
