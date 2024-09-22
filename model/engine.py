@@ -20,7 +20,7 @@ def train_model(model, data):
     hist = model.fit(data['X_train'], data['y_train'], epochs=model_conf['epochs'], validation_data=(data['X_val'], data['y_val']), callbacks=[checkpoint_callback], batch_size=model_conf['batch_size'])
 
     params = np.sum([np.prod(v.get_shape().as_list()) for v in model.trainable_variables])
-    parameters = f"{params} ({(params*4)/(1024**2)} MB)"
+    parameters = f"{params} ({round((params*4)/(1024**2), 3)} MB)"
 
     yhat = model.predict(data['X_test'])
     mean = data['train_mean'].to_numpy().reshape(1,-1)[:,0]
